@@ -1,6 +1,10 @@
 @use "../variables";
-body:has(.template--project) {
-  overflow: hidden;
+// Desktop: the project page is one screen, nothing to scroll vertically.
+// Phones and small screens keep normal vertical page scrolling.
+@media (min-width: #{variables.$md + 1}) {
+  body:has(.template--project) {
+    overflow: hidden;
+  }
 }
 .template--project {
   .content--project {

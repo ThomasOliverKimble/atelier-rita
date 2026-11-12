@@ -106,24 +106,25 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
   root.querySelector("[data-slider-prev]")?.addEventListener("click", () => goTo(index - 1));
   root.querySelector("[data-slider-next]")?.addEventListener("click", () => goTo(index + 1));
 
-  // Wheel and trackpad scroll the carousel sideways. Listening on the whole
-  // carousel (including the "Projet suivant" panel) matters: on desktop the
-  // invisible prev/next halves sit on top of the track and would otherwise
-  // swallow the gesture. A vertical mouse wheel
-  // also scrolls sideways; at either end the page gets the wheel back.
+  // Horizontal gestures (trackpad swipe, shift + wheel) scroll the carousel.
+  // Vertical ones are left alone: on small screens they scroll the page.
+  // Listening on the whole carousel area (including the "Projet suivant"
+  // panel) matters: on desktop the invisible prev/next halves sit on top of
+  // the track and would otherwise swallow the gesture.
   (page ?? root).addEventListener(
     "wheel",
     (e) => {
       if (e.ctrlKey) return;
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const dx = e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX;
+      if (Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return;
       const max = track.scrollWidth - track.clientWidth;
-      if ((track.scrollLeft <= 0 && delta < 0) || (track.scrollLeft >= max - 1 && delta > 0)) return;
+      if ((track.scrollLeft <= 0 && dx < 0) || (track.scrollLeft >= max - 1 && dx > 0)) return;
       e.preventDefault();
       cancelAnimationFrame(frame);
       animating = false;
       track.classList.remove("is-animating");
       const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? track.clientWidth : 1;
-      track.scrollLeft += delta * unit;
+      track.scrollLeft += dx * unit;
     },
     { passive: false },
   );
