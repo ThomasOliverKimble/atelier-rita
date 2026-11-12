@@ -1,9 +1,7 @@
 import {defineType, defineField} from 'sanity'
 import {HomeIcon} from '@sanity/icons'
-import modulesList from '../objects/modules/modulesList'
 import {baseLanguage} from '../locale/supportedLanguages'
 import {seoField} from '../features/seo'
-// console.log(modulesList)
 
 export default defineType({
   name: 'home',

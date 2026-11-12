@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import AtelierView from "../components/AtelierView.astro";
+import { getAtelier, getSettings } from "../lib/queries";
+import { isDraft } from "../lib/draft";
+import { localize, type Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const draft = await isDraft(Astro);
+const [settings, data] = await Promise.all([getSettings(draft), getAtelier(draft)]);
+if (!data) return Astro.redirect("/404");
+---
+
+<Base
+  locale={locale}
+  settings={settings}
+  template="atelier"
+  title={data.seo?.metaTitle || localize(locale, data.title)}
+  description={data.seo?.metaDescription}
+  image={data.seo?.image}>
+  <AtelierView data={data} locale={locale} />
+</Base>

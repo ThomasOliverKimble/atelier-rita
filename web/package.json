@@ -1,54 +1,33 @@
 {
   "name": "web",
-  "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@12.9.1",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "engines": {
-    "node": "24.x"
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:preview": "PREVIEW=true astro build",
+    "preview": "astro preview",
+    "check": "astro check"
   },
   "dependencies": {
-    "@portabletext/react": "^8.0.1",
-    "@sanity/client": "^8.9.0",
-    "@sanity/image-url": "^2.1.1",
-    "clsx": "^2.1.1",
-    "cookies-next": "^6.1.1",
-    "framer-motion": "^14.0.0",
-    "gsap": "^3.15.0",
-    "next": "16.3.8",
-    "next-sanity": "^13.3.4",
-    "next-view-transitions": "^0.3.5",
-    "pubsub-js": "^1.9.5",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "react-intersection-observer": "^11.0.1",
-    "react-player": "^3.4.0",
-    "react-slick": "^0.31.0",
-    "sanity-codegen": "^0.9.8",
-    "sass": "^1.105.1",
-    "slick-carousel": "^2.0.0",
-    "styled-components": "^6.5.3",
-    "throttle-debounce": "^5.0.2"
+    "@astrojs/vercel": "^11.0.0",
+    "@sanity/client": "^8.0.0",
+    "@sanity/image-url": "^2.0.0",
+    "@sanity/preview-url-secret": "^4.0.0",
+    "@sanity/visual-editing": "^6.0.0",
+    "astro": "~7.4.0",
+    "astro-portabletext": "^1.0.0",
+    "groq": "^5.31.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/jsonp": "^0.2.3",
-    "@types/node": "^26",
-    "@types/pubsub-js": "^1.8.6",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/react-slick": "^0.23.13",
-    "@types/styled-components": "^5.1.36",
-    "@types/throttle-debounce": "^5.0.2",
-    "eslint": "^10",
-    "eslint-config-next": "16.3.8",
-    "postcss": "^8.5.29",
-    "tailwindcss": "^4",
-    "typescript": "^7"
+    "@astrojs/check": "^0.9.0",
+    "@astrojs/sitemap": "^3.7.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/jsdom": "^30.0.0",
+    "dompurify": "^3.4.0",
+    "jsdom": "^31.0.0",
+    "sass": "^1.100.0",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.0"
   }
 }

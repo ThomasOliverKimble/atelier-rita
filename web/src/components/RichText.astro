@@ -1,0 +1,13 @@
+---
+import { PortableText } from "astro-portabletext";
+import LinkExternal from "./marks/LinkExternal.astro";
+import LinkInternal from "./marks/LinkInternal.astro";
+
+interface Props {
+  value: unknown[] | null | undefined;
+}
+const { value } = Astro.props;
+const components = { mark: { linkInternal: LinkInternal, linkExternal: LinkExternal } };
+---
+
+<PortableText value={(value ?? []) as never} components={components} />

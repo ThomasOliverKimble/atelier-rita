@@ -1,0 +1,28 @@
+---
+import Base from "../layouts/Base.astro";
+import { getSettings } from "../lib/queries";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const settings = await getSettings();
+const fr = locale === "fr";
+---
+
+<Base locale={locale} settings={settings} template="404" title={fr ? "Page introuvable" : "Page not found"}>
+  <div class="page-404 py-header-h">
+    <div class="inner">
+      <h1 class="mb-md">{fr ? "Oups ! Page introuvable" : "Oops! Page not found"}</h1>
+      <div class="mb-2xl">
+        <p>
+          {fr ? "Il semble que cette page n’existe plus" : "It looks like this page no longer exists"}
+          <br />
+          {fr ? "ou peut-être n’a-t-elle jamais existé." : "or perhaps it never did."}
+        </p>
+      </div>
+      <a href={fr ? "/" : "/en"} class="ui-btn ui-btn__accent">{fr ? "Retour à l’accueil" : "Back to home"}</a>
+    </div>
+  </div>
+</Base>

@@ -22,7 +22,7 @@ export default {
     select: {
       title: `ctitle`,
     },
-    prepare(selection) {
+    prepare(selection: {title?: string}) {
       const {title} = selection
       return {
         title: title,

@@ -1,0 +1,26 @@
+---
+import Base from "../layouts/Base.astro";
+import HomeView from "../components/HomeView.astro";
+import { getHome, getSettings } from "../lib/queries";
+import { isDraft } from "../lib/draft";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const draft = await isDraft(Astro);
+const [settings, data] = await Promise.all([getSettings(draft), getHome(draft)]);
+if (!data) return Astro.redirect("/404");
+---
+
+<Base
+  locale={locale}
+  settings={settings}
+  template="home"
+  isHome
+  title={data.seo?.metaTitle || data.title?.fr || "Atelier Rita"}
+  description={data.seo?.metaDescription}
+  image={data.seo?.image}>
+  <HomeView data={data} locale={locale} />
+</Base>

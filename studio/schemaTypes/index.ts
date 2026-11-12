@@ -1,5 +1,4 @@
 import home from './singletons/home'
-import pageModulaire from './documents/pageModulaire'
 import project from './documents/project'
 import settings from './singletons/settings'
 import projects from './singletons/projects'
@@ -13,8 +12,6 @@ import blockContent from './objects/blockContent'
 import linkExternal from './objects/linkExternal'
 import linkInternal from './objects/linkInternal'
 import linkIcon from './objects/linkIcon'
-import figure from './objects/figure'
-import embed from './objects/embed'
 import keyVal from './objects/keyVal'
 import {seoSchema} from './features/seo'
 import news from './objects/news'
@@ -23,7 +20,6 @@ import cardHome from './objects/cardHome'
 export const schemaTypes = [
   settings,
   home,
-  pageModulaire,
   project,
   atelier,
   projects,
@@ -38,8 +34,6 @@ export const schemaTypes = [
   linkInternal,
   linkIcon,
   seoSchema,
-  embed,
-  figure,
   keyVal,
   news,
 ]

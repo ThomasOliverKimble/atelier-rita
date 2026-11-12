@@ -1,5 +1,4 @@
 import {defineField, defineType} from 'sanity'
-import modulesList from '../objects/modules/modulesList'
 import {InfoOutlineIcon} from '@sanity/icons'
 import {baseLanguage} from '../locale/supportedLanguages'
 import {AiOutlineTable} from 'react-icons/ai'

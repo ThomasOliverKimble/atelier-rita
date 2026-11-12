@@ -1,0 +1,168 @@
+@use "variables";
+body {
+  color: var(--color-accent);
+  font-family: var(--font-primary);
+  font-size: var(--text-body-md);
+  line-height: 1.25;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.02rem;
+  @media all and (min-width: 1080px) {
+    font-size: var(--text-body-md);
+  }
+}
+html {
+}
+@media all and (min-width: 1080px) {
+  html {
+    font-size: 16px;
+  }
+}
+@media all and (min-width: 1920px) {
+  html {
+  }
+}
+.text-display-lg {
+  line-height: 1.1;
+}
+.italic {
+  font-style: italic;
+}
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+.headline {
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+button {
+  cursor: pointer;
+}
+/* Buttons */
+.btn {
+  &.btn--primary {
+    background-color: var(--color-blue);
+    color: white;
+    border: 1px solid var(--color-blue);
+    &:hover {
+      background-color: white;
+      color: var(--color-blue);
+    }
+  }
+  &.btn--lg {
+    font-size: var(--text-display-lg);
+  }
+}
+/* Links */
+a,
+a[aria-current="page"],
+button {
+  text-decoration: none;
+  &:hover,
+  &:active,
+  &.is-active,
+  &.is-current-page {
+    color: rgba(var(--color-accent-rgb), 0.5);
+  }
+}
+a[aria-current="page"],
+a.is-current,
+button.is-current {
+  color: var(--color-blue);
+}
+/* Text elements */
+p,
+.text p {
+  line-height: 1;
+  margin-bottom: 1em;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &:empty {
+    display: none;
+  }
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.information {
+  white-space: pre;
+}
+.sep-dash {
+  padding: 0 0.3em;
+}
+.tabnum {
+  font-feature-settings:
+    "tnum" on,
+    "lnum" on,
+    "case" on;
+}
+.strong,
+strong {
+  font-weight: bold;
+}
+button {
+  background: transparent;
+}
+input {
+  background-color: transparent;
+  border-bottom: 1px solid;
+  &::placeholder {
+    color: white;
+    text-transform: capitalize;
+  }
+}
+input[type="submit"] {
+  background-color: white;
+  color: black;
+  width: 100%;
+  padding: 0.5em;
+}
+hr {
+  background-color: var(--color-primary);
+  border: 0;
+  height: 1px;
+  margin: 1.1em calc(var(--space-sm) * -1);
+}
+pre {
+  background: #cfcfcf;
+  line-height: 1.5;
+  margin-bottom: 1.5em;
+  overflow: auto;
+  padding: 0.75em 1.5em;
+}
+abbr,
+acronym,
+dfn {
+  border-bottom: var(--border);
+  cursor: help;
+}
+address {
+  display: block;
+  font-style: initial;
+}
+ins {
+  background: #fff9c0;
+  text-decoration: none;
+}
+sup,
+sub {
+  font-size: 10px;
+  height: 0;
+  line-height: 1;
+  position: relative;
+  vertical-align: text-top;
+}
+sup {
+  bottom: 1ex;
+}
+sub {
+  top: 0.5ex;
+}

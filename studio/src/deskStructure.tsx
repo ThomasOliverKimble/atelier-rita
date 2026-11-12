@@ -1,7 +1,7 @@
 // import {BiDockTop, BiDockBottom} from 'react-icons/bi'
 // import {ControlsIcon} from '@sanity/icons'
 
-import {ListItemBuilder} from 'sanity/structure'
+import type {ListItemBuilder, StructureResolver} from 'sanity/structure'
 
 // If you add document types to desk structure manually, you can add them to this function to prevent duplicates in the root pane
 const hiddenDocTypes = (listItem: ListItemBuilder) => {
@@ -17,13 +17,11 @@ const hiddenDocTypes = (listItem: ListItemBuilder) => {
     'projects',
     'atelier',
     'media.tag',
-    'pageModulaire',
-    'event',
     'settings',
   ].includes(id)
 }
 
-export const structure = (S) =>
+export const structure: StructureResolver = (S) =>
   S.list()
     .title('Base')
     .items([

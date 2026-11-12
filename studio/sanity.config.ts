@@ -1,50 +1,20 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
 import {presentationTool} from 'sanity/presentation'
-import {linkResolverPreview} from './src/linkResolverPreview'
 import {colorInput} from '@sanity/color-input'
-import {structure} from './src/deskStructure'
-import {resolveProductionUrl} from './src/actions/resolveProductionUrl'
 import {media, mediaAssetSource} from 'sanity-plugin-media'
-// import {defaultDocumentNode} from './src/defaultDocumentNode'
+import {schemaTypes} from './schemaTypes'
+import {linkResolverPreview} from './src/linkResolverPreview'
+import {structure} from './src/deskStructure'
 
-const remoteURL = 'https://www.atelierrita.org'
-const localURL = 'http://localhost:3000'
-const previewURL = window.location.hostname === 'localhost' ? localURL : remoteURL
+// The preview deployment renders drafts (see web/README.md, "Preview").
+// Production is a static build and has no preview routes.
+const previewOrigin =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:4321'
+    : process.env.SANITY_STUDIO_PREVIEW_URL || 'https://preview.atelierrita.org'
 
-const plugins = [
-  structureTool({structure}),
-  media({
-    // creditLine: {
-    //   enabled: true,
-    //   // boolean - enables an optional "Credit Line" field in the plugin.
-    //   // Used to store credits e.g. photographer, licence information
-    //   // excludeSources: ['unsplash']
-    //   // string | string[] - when used with 3rd party asset sources, you may
-    //   // wish to prevent users overwriting the creditLine based on the `source.name`
-    // },
-    // locales: [
-    //   {id: 'fr', title: 'French'},
-    //   {id: 'en', title: 'English'},
-    // ],
-  }),
-  visionTool(),
-  colorInput(),
-  // ...(isDev ? devOnlyPlugins : []),
-  presentationTool({
-    title: 'Live preview',
-    resolve: linkResolverPreview,
-    previewUrl: {
-      origin: previewURL,
-      previewMode: {
-        enable: '/api/preview',
-        disable: '/api/exit-preview',
-      },
-    },
-  }),
-]
 export default defineConfig({
   name: 'default',
   title: 'Rita Backoffice',
@@ -52,18 +22,32 @@ export default defineConfig({
   projectId: 'ra5yjexn',
   dataset: 'production',
 
-  plugins: plugins,
+  plugins: [
+    structureTool({structure}),
+    media(),
+    visionTool(),
+    colorInput(),
+    presentationTool({
+      title: 'Live preview',
+      resolve: linkResolverPreview,
+      previewUrl: {
+        origin: previewOrigin,
+        previewMode: {
+          enable: '/api/preview',
+          disable: '/api/exit-preview',
+        },
+      },
+    }),
+  ],
 
   schema: {
     types: schemaTypes,
   },
+
   form: {
     // only allow picking images through the media plugin
     image: {
       assetSources: () => [mediaAssetSource],
     },
-  },
-  document: {
-    actions: [resolveProductionUrl],
   },
 })

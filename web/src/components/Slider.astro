@@ -1,0 +1,40 @@
+---
+import { croppedSize, isSvg, type SanityImg } from "../lib/image";
+import { localize, t, type Locale, type Localized } from "../lib/i18n";
+import Figure from "./Figure.astro";
+import SvgSlot from "./SvgSlot.astro";
+
+type Slide = NonNullable<SanityImg> & { caption?: Localized<string> | null };
+
+interface Props {
+  images: Slide[] | null | undefined;
+  locale: Locale;
+}
+const { images, locale } = Astro.props;
+const slides = images ?? [];
+---
+
+<div class="slider-container" data-slider>
+  <div class="slider-track" tabindex="0" role="region" aria-roledescription="carousel">
+    {
+      slides.map((image, i) => {
+        const caption = localize(locale, image.caption) ?? "";
+        const { width, height } = croppedSize(image);
+        const ratio = +(width / height).toFixed(3);
+        return (
+          <div class="ss-slider__slide" data-caption={caption}>
+            {isSvg(image) ? (
+              <SvgSlot image={image} alt={caption} eager={i < 2} />
+            ) : (
+              <Figure image={image} alt={caption} sizes={`(max-width: 768px) 100vw, calc(60vh * ${ratio})`} priority={i === 0} />
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+  <div class="slider-controls">
+    <button type="button" class="prev" data-slider-prev aria-label={t(locale, "previous")}></button>
+    <button type="button" class="next" data-slider-next aria-label={t(locale, "next")}></button>
+  </div>
+</div>

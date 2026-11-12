@@ -1,0 +1,150 @@
+@use "../variables";
+
+.card {
+  --aspect-ratio: 238 / 317;
+  &--home,
+  &--project {
+    color: var(--color-bg);
+    a:hover {
+      color: rgba(var(--color-accent-rgb), 1);
+    }
+  }
+  &--home {
+    &:not(.has-link) {
+      pointer-events: none;
+    }
+  }
+  &--project--text {
+    border-bottom: var(--border);
+    a {
+      padding: 0.8462em 0;
+      display: block;
+    }
+  }
+
+  &.card--home.has-verso {
+    // aspect-ratio: 3 / 4;
+    aspect-ratio: var(--aspect-ratio);
+
+    .perspective {
+      perspective: 600px;
+      display: block;
+    }
+    &.is-active {
+      .card--home__inner {
+        transform: rotateY(var(--flip-deg, 180deg));
+      }
+    }
+    .card--home__inner {
+      position: relative;
+      // fast start, soft landing: feels immediate under the pointer
+      transition: transform 0.32s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transform-style: preserve-3d;
+      position: relative;
+      aspect-ratio: var(--aspect-ratio);
+    }
+    .recto,
+    .verso {
+      aspect-ratio: var(--aspect-ratio) !important;
+      backface-visibility: hidden;
+      height: 100%;
+    }
+    .recto {
+      height: 100%;
+    }
+    .verso {
+      transform: rotateY(180deg);
+      position: absolute;
+      inset: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: calc(var(--spacing-sm) * 0.9) var(--spacing-sm);
+      .header,
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--spacing-lg);
+        gap: 0.5em;
+        line-height: 1;
+      }
+      .header {
+        align-items: flex-start;
+      }
+      .footer {
+        align-items: flex-end;
+      }
+      .body {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        line-height: 1;
+      }
+    }
+    figure {
+      height: 100%;
+      &.is-landscape img {
+        // aspect-ratio: 317 / 238 !important;
+        object-fit: contain;
+        object-position: top;
+        height: auto !important;
+        aspect-ratio: unset !important;
+      }
+
+      img {
+        aspect-ratio: var(--aspect-ratio) !important;
+        height: 100% !important;
+        object-fit: cover;
+        object-position: var(--object-position, 50% 50%);
+        // position: sticky;
+        // top: var(--header-h);
+      }
+    }
+
+    @media screen and (max-width: variables.$md) {
+      .verso {
+        padding: calc(var(--spacing-xs) * 0.5) var(--spacing-xs);
+        .body {
+          width: calc(100% - var(--spacing-lg));
+        }
+      }
+    }
+  }
+  &.card--home {
+    figure {
+      img {
+        aspect-ratio: var(--aspect-ratio) !important;
+        height: 100% !important;
+        object-fit: cover;
+        object-position: var(--object-position, 50% 50%);
+      }
+    }
+  }
+}
+
+// Flip performance (see scripts/home.ts): pre-promote nearby cards and keep
+// both faces on the GPU.
+.card.card--home.has-verso {
+  &.is-near .card--home__inner {
+    will-change: transform;
+  }
+  .card--home__inner {
+    transform: rotateY(0deg);
+  }
+  .recto,
+  .verso {
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  .verso {
+    transform: rotateY(180deg) translateZ(0);
+  }
+}

@@ -1,9 +1,15 @@
 {
-  "name": "www",
+  "name": "atelier-rita",
   "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "sanity:schema": "cd studio && pnpm exec sanity schema extract --path ../web/schema.json",
-    "sanity:typegen": "cd studio && pnpm exec sanity typegen generate",
-    "sanity:types": "npm run sanity:schema && npm run sanity:typegen"
+    "dev": "pnpm --filter web dev",
+    "dev:studio": "pnpm --filter studio dev",
+    "build": "pnpm --filter web build",
+    "check": "pnpm -r check",
+    "types": "pnpm --filter studio types"
   }
 }

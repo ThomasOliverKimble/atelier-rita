@@ -1,0 +1,152 @@
+@use "../variables";
+body:has(.template--project) {
+  overflow: hidden;
+}
+.template--project {
+  .content--project {
+    &.slider-ended .slider {
+      .related {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+    }
+
+    .slider {
+      position: relative;
+      overflow: hidden;
+      // .flex {
+      //   gap: var(--spacing-gutter);
+      // }
+      .related {
+        transition: clip-path 0.3s ease;
+      }
+      .related {
+        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: var(--gridder-1_5);
+        // --offset: calc(100% / 5 * 3);
+        // transform: translateX(var(--offset));
+        overflow: hidden;
+
+        a {
+          display: flex;
+          align-items: center;
+          // flex-direction: column;
+          gap: var(--spacing-gutter);
+        }
+        h2 {
+          white-space: nowrap;
+        }
+        .image-cover {
+          flex-shrink: 0;
+        }
+      }
+    }
+    .footer {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: calc(var(--spacing-md) * 0.6) var(--spacing-md);
+      // display: grid;
+      // grid-template-columns: repeat(5, minmax(0, 1fr));
+      // align-items: baseline;
+      .grid {
+        position: relative;
+      }
+      .title {
+        // max-width: 20rem;
+        grid-column: span 2 / span 2;
+        line-height: 1;
+      }
+      .toggle {
+        text-align: left;
+        align-self: end;
+        cursor: pointer;
+      }
+    }
+    .project-infos {
+      .header,
+      .text {
+        margin-bottom: var(--spacing-md);
+        position: relative;
+      }
+      .title {
+        max-width: calc(100% - 4em);
+      }
+      .year {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+      .fiche-technique {
+        li {
+          display: flex;
+          align-items: baseline;
+          gap: 1rem;
+          .key {
+            min-width: 9rem;
+          }
+          .value {
+            white-space: pre;
+          }
+        }
+      }
+    }
+    @media all and (max-width: variables.$md) {
+      &.slider-ended .slider {
+        .slider-container {
+          clip-path: polygon(0 0, 20% 0, 20% 100%, 0 100%);
+        }
+        .related {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+      }
+      .slider {
+        .related {
+          width: var(--gridder-1_2);
+          img {
+            height: 70vh !important;
+            width: calc(100% - var(--spacing-gutter) * 2) !important;
+          }
+        }
+      }
+
+      .footer {
+        padding: calc(var(--spacing-xs) * 0.6) var(--spacing-xs);
+        flex-direction: column;
+        position: fixed;
+        bottom: var(--spacing-sm);
+        left: var(--spacing-sm);
+        padding: 0;
+
+        .title {
+          max-width: unset;
+          grid-column: span 4 / span 4;
+        }
+      }
+    }
+  }
+}
+
+// "En savoir plus" / "Read more": centred under the slider.
+.template--project .content--project .footer .toggle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-align: center;
+}
+@media all and (max-width: variables.$md) {
+  .template--project .content--project .footer {
+    right: var(--spacing-sm);
+    width: auto;
+    .toggle {
+      position: static;
+      transform: none;
+      justify-self: center;
+    }
+  }
+}

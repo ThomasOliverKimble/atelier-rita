@@ -1,0 +1,23 @@
+---
+// A recolourable inline SVG. The sanitized file is fetched by
+// scripts/svg.ts when the element nears the viewport (or immediately with
+// `eager`), then injected and "paint-tagged" so CSS can recolour it.
+import { assetId, svgPath, type SanityImg } from "../lib/image";
+
+interface Props {
+  image: SanityImg;
+  alt: string;
+  eager?: boolean;
+}
+const { image, alt, eager = false } = Astro.props;
+const w = image?.w ?? 0;
+const h = image?.h ?? 0;
+---
+
+<span
+  class:list={["svg-inline", w > h && "is-landscape", w < h && "is-portrait"]}
+  role="img"
+  aria-label={alt}
+  data-svg={svgPath(assetId(image!.url!))}
+  data-eager={eager ? "" : undefined}
+  style={`--aspectRatio:${w}/${h}`}></span>

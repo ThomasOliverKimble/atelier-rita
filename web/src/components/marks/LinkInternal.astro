@@ -1,0 +1,9 @@
+---
+import type { MarkProps } from "astro-portabletext/types";
+import { localizedHref } from "../../lib/links";
+
+const { node } = Astro.props as MarkProps<{ link?: { _type?: string; slug?: string } | null }>;
+const locale = Astro.url.pathname.startsWith("/en") ? "en" : "fr";
+---
+
+<a href={localizedHref(locale, node.markDef.link)}><slot /></a>

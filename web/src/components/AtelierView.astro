@@ -1,0 +1,49 @@
+---
+import { localize, t, type Locale } from "../lib/i18n";
+import type { ATELIER_QUERY_RESULT } from "../lib/sanity.types";
+import Modal from "./Modal.astro";
+import RichText from "./RichText.astro";
+import Slider from "./Slider.astro";
+
+interface Props {
+  data: NonNullable<ATELIER_QUERY_RESULT>;
+  locale: Locale;
+}
+const { data, locale } = Astro.props;
+const images = data.images ?? [];
+---
+
+<div class="content--atelier app-h">
+  <div class="slider">
+    <Slider images={images} locale={locale} />
+    <div class="caption" data-slider-caption>{localize(locale, images[0]?.caption) ?? ""}</div>
+  </div>
+  <div class="footer">
+    <div class="grid md:grid-cols-5 md:gap-gutter">
+      {
+        data.items?.map((item) => {
+          const label = localize(locale, item.key) ?? "";
+          const id = `atelier-${item._key}`;
+          return (
+            <div class="item" id={item.key?.fr ?? undefined}>
+              <Modal id={id} label={label} closeLabel={t(locale, "close")} group="atelier">
+                <div class="text">
+                  <RichText value={localize(locale, item.value)} />
+                </div>
+              </Modal>
+              <button type="button" data-modal-toggle={id} aria-controls={id} aria-expanded="false">
+                {label}
+              </button>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  import "../scripts/modal";
+  import "../scripts/svg";
+  import "../scripts/slider";
+</script>

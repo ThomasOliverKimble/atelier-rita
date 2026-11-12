@@ -1,0 +1,9 @@
+---
+interface Props {
+  city?: string | null;
+  zip?: string | null;
+}
+const { city, zip } = Astro.props;
+---
+
+<span class="city-n-zip">{city && <span>{city}</span>}{city && zip && <span> </span>}{zip && <span>{zip}</span>}</span>

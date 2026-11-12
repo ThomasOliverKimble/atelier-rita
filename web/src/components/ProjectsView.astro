@@ -1,0 +1,87 @@
+---
+import { localize, t, type Locale } from "../lib/i18n";
+import { localizedHref } from "../lib/links";
+import type { ProjectRow } from "../lib/queries";
+import CityAndZip from "./CityAndZip.astro";
+import Figure from "./Figure.astro";
+
+interface Props {
+  items: ProjectRow[];
+  locale: Locale;
+}
+const { items, locale } = Astro.props;
+
+const columns = [
+  { key: "title", label: "name", hidden: false },
+  { key: "type", label: "type", hidden: true },
+  { key: "programme", label: "programme", hidden: true },
+  { key: "location", label: "location", hidden: true },
+  { key: "client", label: "client", hidden: true },
+  { key: "numbers", label: "numbers", hidden: true },
+  { key: "year", label: "year", hidden: false },
+] as const;
+---
+
+<div class="content content--projects">
+  <div class="grid md:grid-cols-5 gap-gutter">
+    <div class="items md:col-span-3">
+      <div class="thead">
+        <div class="tr grid grid-cols-2 md:grid-cols-7 gap-gutter">
+          {
+            columns.map((c) => (
+              <button type="button" class:list={["th", c.key, c.hidden && "hidden-sm"]} data-key={c.key} aria-sort="none">
+                {t(locale, c.label)}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+      <div class="tbody">
+        {
+          items.map((p) => {
+            const title = localize(locale, p.title) ?? "";
+            const type = localize(locale, p.type) ?? "";
+            const programme = localize(locale, p.programme) ?? "";
+            const numbers = localize(locale, p.numbers) ?? "";
+            const year = localize(locale, p.year) ?? "";
+            return (
+              <div
+                class="tr card card--project--text"
+                data-title={title}
+                data-type={type}
+                data-programme={programme}
+                data-location={p.city ?? ""}
+                data-client={p.client ?? ""}
+                data-numbers={numbers}
+                data-year={year}>
+                <a href={localizedHref(locale, { _type: "project", slug: p.slug })}>
+                  <div class="grid grid-cols-2 md:grid-cols-7 gap-gutter">
+                    <h2 class="td">{title}</h2>
+                    <div class="td type hidden-sm">{type}</div>
+                    <div class="td programme hidden-sm">{programme}</div>
+                    <div class="td location hidden-sm">
+                      <CityAndZip city={p.city} zip={p.zip} />
+                    </div>
+                    <div class="td client hidden-sm">{p.client}</div>
+                    <div class="td numbers hidden-sm">{numbers}</div>
+                    <div class="td year">{year}</div>
+                  </div>
+                </a>
+                {p.cover?.url && (
+                  <template>
+                    <Figure image={p.cover} alt={title} sizes="40vw" />
+                  </template>
+                )}
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+    <div class="thumbnail md:col-span-2 hidden-sm"></div>
+  </div>
+</div>
+
+<script>
+  import "../scripts/projects";
+</script>

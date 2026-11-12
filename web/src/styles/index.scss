@@ -1,0 +1,103 @@
+// Order matters: these rules are unlayered and must win over Tailwind's
+// layered utilities exactly like on the old site.
+@use "variables";
+@use "grid";
+@use "utils";
+@use "typography";
+@use "layout";
+
+@use "components/header";
+@use "components/card";
+@use "components/svg-inline";
+@use "components/locales-switcher";
+@use "components/back-home";
+@use "components/modal";
+@use "components/slider";
+
+@use "templates/home";
+@use "templates/project";
+@use "templates/projects";
+@use "templates/atelier";
+
+@font-face {
+  font-family: "Selecta";
+  src: url("/fonts/Selecta-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Selecta";
+  src: url("/fonts/Selecta-Medium-Italic.woff2") format("woff2");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+body {
+  font-family: "Selecta", var(--font-primary);
+}
+
+// Logo: on the home page the width follows scroll progress (--logo-p, 0 to 1,
+// set by scripts/header.ts) until it latches shrunk. Elsewhere it is capped
+// by the max-width rules in _header.scss.
+body.is-home header .rita-logo {
+  width: calc(var(--logo-start) + (var(--logo-end) - var(--logo-start)) * var(--logo-p, 0));
+}
+body.is-home header.is-shrunk .rita-logo {
+  width: var(--logo-end);
+}
+
+// Things that became real <button>/<a> elements for keyboard access keep
+// the look of the old <div>s.
+:where(.thead .th, .modal__close, .slider-controls button) {
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+}
+.locales-switcher li a {
+  line-height: 1;
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+// Page changes: native crossfade where cross-document View Transitions exist
+// (the header morphs between its home and inner-page sizes), a fade-in of
+// the page content everywhere else (see inline/transition.js).
+@view-transition {
+  navigation: auto;
+}
+header {
+  view-transition-name: header;
+}
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 0.2s;
+}
+
+@keyframes rita-page-in {
+  from {
+    opacity: 0;
+  }
+}
+.page-fade main {
+  animation: rita-page-in 0.2s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

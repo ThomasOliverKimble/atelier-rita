@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+[data-theme="theme-rita"] {
+  /* ===================== */
+  /* BASE LAYOUT */
+  /* ===================== */
+
+  --header-height: 43.5px;
+
+  --screen-xs: 600px;
+  --screen-sm: 768px;
+  --screen-md: 1080px;
+  --screen-lg: 1441px;
+
+  /* ===================== */
+  /* COLORS */
+  /* ===================== */
+
+  --color-bg: #fff;
+  --color-primary: red;
+  --color-secondary: #aaaaaa;
+  --color-hover: #333;
+  --color-red: #ff0000;
+  --color-white: #fff;
+
+  /* overwritten before first paint by the accent script (settings.colors) */
+  --color-accent: #ff0000;
+  --color-accent-rgb: 255, 0, 0;
+
+  /* ===================== */
+  /* TYPOGRAPHY */
+  /* ===================== */
+
+  --font-primary:
+    "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman",
+    "Helvetica Neue Roman", "TeXGyreHerosRegular", "Helvetica", "Arial",
+    sans-serif;
+
+  /*
+  md (1280px) 13px
+  md (1,512px) 15px
+  md (1,728px) 17px
+  md (1,920px) 19px
+  md (2,560px) 26px
+
+  lg (1280px) 24px
+  lg (1,512px) 28px
+  lg (1,728px) 31px
+  lg (1,920px) 33px
+  lg (2,560px) 45px
+  */
+  /* BODY (md) */
+  --text-body-md: 0.8125rem; /* 13px */
+
+  /* DISPLAY (lg) */
+  --text-display-lg: 1.5rem; /* 24px */
+
+  /* small variant (remplacement de ton --text-display-lg--sm) */
+  --text-display-md: 1.063rem; /* ~17px */
+
+  /* ===================== */
+  /* SPACING */
+  /* ===================== */
+
+  --spacing-xs: 0.438rem; /* ~7px (corrigé implicite cohérence) */
+  --spacing-sm: 0.625rem; /* 10px */
+  --spacing-md: 1.125rem; /* 18px (tu avais 15px commenté incohérent) */
+  --spacing-lg: 1.875rem; /* 30px */
+  --spacing-70: 4.375rem; /* 70px */
+  --spacing-gutter: 1.125rem;
+
+  --gutter: 0.4em;
+
+  /* ===================== */
+  /* BORDER */
+  /* ===================== */
+
+  --border-width: 1.5px;
+  --border: var(--border-width) solid;
+
+  --border-width-lg: 2px;
+  --border-lg: var(--border-width-lg) solid;
+
+  /* ===================== */
+  /* MOTION */
+  /* ===================== */
+
+  --cubic: cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+/* ===================== */
+/* RESPONSIVE TYPOGRAPHY */
+/* ===================== */
+
+@media (min-width: 1280px) {
+  [data-theme="theme-rita"] {
+    --text-body-md: 0.8125rem; /* 13px */
+    --text-display-lg: 1.5rem; /* 24px */
+  }
+}
+
+@media (min-width: 1512px) {
+  [data-theme="theme-rita"] {
+    --text-body-md: 0.9375rem; /* 15px */
+    --text-display-lg: 1.75rem; /* 28px */
+  }
+}
+
+@media (min-width: 1728px) {
+  [data-theme="theme-rita"] {
+    --text-body-md: 1.0625rem; /* 17px */
+    --text-display-lg: 1.9375rem; /* 31px */
+  }
+}
+
+@media (min-width: 1920px) {
+  [data-theme="theme-rita"] {
+    --text-body-md: 1.1875rem; /* 19px */
+    --text-display-lg: 2.0625rem; /* 33px */
+  }
+}
+
+@media (min-width: 2560px) {
+  [data-theme="theme-rita"] {
+    --text-body-md: 1.625rem; /* 26px */
+    --text-display-lg: 2.8125rem; /* 45px */
+  }
+}
+
+/* ===================== */
+/* TAILWIND THEME BRIDGE */
+/* ===================== */
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-hover: var(--color-hover);
+  --color-red: var(--color-red);
+
+  --font-primary: var(--font-primary);
+
+  --text-body-md: var(--text-body-md);
+  --text-display-lg: var(--text-display-lg);
+  --text-display-md: var(--text-display-md);
+
+  --spacing-xs: var(--spacing-xs);
+  --spacing-sm: var(--spacing-sm);
+  --spacing-md: var(--spacing-md);
+  --spacing-lg: var(--spacing-lg);
+  --spacing-70: var(--spacing-70);
+  --spacing-gutter: var(--spacing-gutter);
+
+  --header-height: var(--header-height);
+
+  --cubic: var(--cubic);
+
+  --border-width: var(--border-width);
+  --border: var(--border);
+  --border-width-lg: var(--border-width-lg);
+  --border-lg: var(--border-lg);
+
+  --gutter: var(--gutter);
+
+  --screen-xs: var(--screen-xs);
+  --screen-sm: var(--screen-sm);
+  --screen-md: var(--screen-md);
+  --screen-lg: var(--screen-lg);
+}

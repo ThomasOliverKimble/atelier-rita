@@ -1,0 +1,36 @@
+---
+// Floating draggable panel. Behaviour lives in scripts/modal.ts.
+import IconX from "./IconX.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  closeLabel: string;
+  big?: boolean;
+  /** open automatically after this many ms (home news) */
+  autoOpen?: number;
+  /** on touch/small screens only one panel of a group stays open (atelier) */
+  group?: string;
+  class?: string;
+}
+const { id, label, closeLabel, big = false, autoOpen, group, class: extra } = Astro.props;
+---
+
+<div
+  class:list={["modal", extra]}
+  id={id}
+  role="dialog"
+  aria-label={label}
+  data-modal
+  data-auto-open={autoOpen}
+  data-group={group}>
+  <div class="modal__body hide-sb">
+    <slot />
+  </div>
+  <div class="modal__handle"><div class="handle-inner"></div></div>
+  <div class="modal__footer">
+    <button type="button" class:list={["modal__close", big && "modal__close--big"]} data-modal-close aria-label={closeLabel}>
+      <IconX />
+    </button>
+  </div>
+</div>

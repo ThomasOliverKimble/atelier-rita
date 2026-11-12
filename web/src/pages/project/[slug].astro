@@ -1,0 +1,10 @@
+---
+import Project from "../../routes/Project.astro";
+import { getProjectSlugs } from "../../lib/queries";
+
+export async function getStaticPaths() {
+  return (await getProjectSlugs()).filter(Boolean).map((slug) => ({ params: { slug: slug! } }));
+}
+---
+
+<Project locale="fr" slug={Astro.params.slug!} />

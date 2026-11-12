@@ -1,0 +1,48 @@
+@use "variables";
+
+// Column widths of the site grid, as CSS math.
+//
+// The old site rendered a hidden "Gridder" DOM grid and re-measured it with
+// getBoundingClientRect on every resize to produce these variables. Same
+// numbers, no measuring loop. --vw is the viewport width without a classic
+// scrollbar (document.documentElement.clientWidth, published before first
+// paint by inline/header.js and kept current on resize), falling back to 100vw.
+//
+// Naming: --gridder-{span}_{columns}.
+
+:root {
+  --g-pad: var(--spacing-xs);
+  --g-gap: var(--spacing-sm);
+  --g-w: calc(var(--vw, 100vw) - 2 * var(--g-pad));
+
+  --gridder-2_2: var(--g-w);
+  --gridder-1_2: calc((var(--g-w) - var(--g-gap)) / 2);
+  --gridder-5_10: var(--gridder-1_2);
+  --gridder-1_5: calc((var(--g-w) - 4 * var(--g-gap)) / 5);
+  --gridder-3_5: calc(3 * var(--gridder-1_5) + 2 * var(--g-gap));
+
+  // Logo shrink on the home page: from --logo-start to --logo-end over
+  // (start - end) / logo aspect ratio pixels of scroll.
+  --logo-start: var(--gridder-2_2);
+  --logo-end: var(--gridder-1_2);
+}
+
+@media (min-width: variables.$sm) {
+  :root {
+    --g-pad: var(--spacing-md);
+    --g-gap: var(--spacing-gutter);
+    --gridder-5_10: calc((var(--g-w) - var(--g-gap)) / 2);
+    --gridder-1_2: var(--gridder-5_10);
+
+    // 768 to 1080px: the old JS read a display:none grid here and gave the
+    // logo a width of 0px (invisible). Use the 5-column header grid instead.
+    --logo-start: var(--gridder-3_5);
+    --logo-end: var(--gridder-5_10);
+  }
+}
+
+@media (min-width: #{variables.$md + 1}) {
+  :root {
+    --logo-end: var(--gridder-1_5);
+  }
+}

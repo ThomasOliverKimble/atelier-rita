@@ -1,0 +1,118 @@
+@use "../variables";
+
+header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  padding: var(--spacing-md);
+  z-index: 50;
+
+  font-size: var(--text-display-lg);
+  color: var(--color-accent);
+  svg path {
+    fill: var(--color-accent);
+  }
+  .site-name:hover a {
+    opacity: 1 !important;
+  }
+  .rita-logo {
+    transform-origin: top left;
+    max-width: 100%;
+    svg {
+      width: 100%;
+    }
+  }
+  nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    a,
+    button {
+      line-height: 1;
+      display: inline-block;
+    }
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      .spacer,
+      ul.menu {
+        width: var(--gridder-1_5);
+      }
+    }
+    ul.locales-switcher li {
+      transform: translateY(-0.27em);
+    }
+    ul.menu li {
+      transform: translateY(0.27em);
+    }
+    ul.menu {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--spacing-gutter);
+      li:first-child {
+        transform: translate(-0.05em, 0.27em);
+      }
+    }
+  }
+  @media all and (max-width: variables.$md) {
+    padding: var(--spacing-xs);
+    font-size: var(--text-display-lg--sm);
+    nav {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .bottom {
+        background-color: transparent;
+        justify-content: flex-end;
+        ul.menu {
+          width: unset;
+          li {
+            transform: translateY(0.28em);
+          }
+        }
+      }
+    }
+  }
+}
+
+body:has(.content--projects) header {
+  background-color: white;
+  border: none;
+}
+body.is-home header {
+  color: var(--color-white);
+  svg path {
+    fill: var(--color-white);
+  }
+  a:hover,
+  button:hover {
+    color: var(--color-white);
+    opacity: 0.5;
+  }
+
+  // The description gives way to the nav as the page scrolls. --swap (0 at
+  // the top, 1 once the logo is a third of the way to small) is set on every
+  // scroll frame by scripts/header.ts, so this follows the finger/wheel
+  // exactly in both directions instead of playing a timed animation.
+  .description {
+    position: absolute;
+    opacity: calc(1 - var(--swap, 0));
+    transform: translateY(calc(-1rem * var(--swap, 0)));
+  }
+  nav {
+    opacity: var(--swap, 0);
+    transform: translateY(calc(1rem * (1 - var(--swap, 0))));
+  }
+}
+
+body:not(.is-home) header {
+  .rita-logo {
+    transition: width 0.2s var(--cubic);
+    max-width: var(--gridder-1_5);
+    @media all and (max-width: variables.$md) {
+      max-width: var(--gridder-5_10);
+    }
+  }
+}

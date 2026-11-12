@@ -1,0 +1,40 @@
+---
+import { croppedSize, imageUrl, objectPosition, srcset, type SanityImg } from "../lib/image";
+
+interface Props {
+  image: SanityImg;
+  alt?: string;
+  sizes?: string;
+  width?: number;
+  caption?: string;
+  /** above-the-fold image: load eagerly with high priority */
+  priority?: boolean;
+}
+const { image, alt = "Rita", sizes = "100vw", width = 1000, caption, priority = false } = Astro.props;
+const { width: w, height: h } = croppedSize(image, width);
+const pos = objectPosition(image);
+const lqip = image?.lqip;
+const style = [pos && `--object-position:${pos}`, lqip && `background:url(${lqip}) center/cover no-repeat`]
+  .filter(Boolean)
+  .join(";");
+---
+
+{
+  image?.url && (
+    <figure class:list={["figure", w / h > 1 ? "is-landscape" : "is-portrait"]} style={pos ? `--object-position:${pos}` : undefined}>
+      <img
+        src={imageUrl(image, Math.min(width, w))}
+        srcset={srcset(image)}
+        sizes={sizes}
+        width={w}
+        height={h}
+        alt={alt}
+        loading={priority ? "eager" : "lazy"}
+        fetchpriority={priority ? "high" : undefined}
+        decoding="async"
+        style={style || undefined}
+      />
+      {caption && <figcaption class="sm-only">{caption}</figcaption>}
+    </figure>
+  )
+}

@@ -16,10 +16,11 @@ export default defineCliConfig({
   },
   schemaExtraction: {
     enabled: true,
+    path: './schema.json',
   },
   typegen: {
-    path: '../web/app/**/*.{ts,tsx}',
-    schema: '../web/schema.json',
-    generates: '../web/app/types/sanity.types.ts',
+    path: '../web/src/**/*.{ts,astro}',
+    schema: './schema.json',
+    generates: '../web/src/lib/sanity.types.ts',
   },
 })

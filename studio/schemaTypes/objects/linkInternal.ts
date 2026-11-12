@@ -1,7 +1,7 @@
 // import supportedLanguages from "../locale/supportedLanguages";
 import {defineField} from 'sanity'
 import {baseLanguage} from '../locale/supportedLanguages'
-import linkIntternalTypes from '../misc/linkIntternalTypes'
+import linkInternalTypes from '../misc/linkInternalTypes'
 
 export default defineField({
   title: 'Link Internal',
@@ -28,7 +28,7 @@ export default defineField({
       name: 'link',
       type: 'reference',
       weak: true,
-      to: linkIntternalTypes,
+      to: linkInternalTypes,
     }),
   ],
 })

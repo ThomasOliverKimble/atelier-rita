@@ -1,0 +1,80 @@
+---
+import "../styles/global.css";
+import "../styles/index.scss";
+import Header from "../components/Header.astro";
+import InlineScript from "../components/InlineScript.astro";
+import accent from "../inline/accent.js?raw";
+import transition from "../inline/transition.js?raw";
+import { alternatePath, locales, t, type Locale } from "../lib/i18n";
+import type { Settings } from "../lib/queries";
+
+interface Props {
+  locale: Locale;
+  settings: Settings | null;
+  /** page title without the site suffix; omit on the home page */
+  title?: string | null;
+  description?: string | null;
+  image?: string | null;
+  isHome?: boolean;
+  template: "home" | "projects" | "project" | "atelier" | "404";
+}
+
+const { locale, settings, title, description, image, isHome = false, template } = Astro.props;
+
+const SITE_NAME = "Rita";
+// Title separator of the previous site (an em dash), kept for identical titles.
+const SEP = ` ${String.fromCharCode(0x2014)} `;
+const fullTitle = title ? (isHome ? title : `${title}${SEP}${SITE_NAME}`) : "Atelier Rita";
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const colors = settings?.colors ?? [];
+---
+
+<!doctype html>
+<html lang={locale} data-theme="theme-rita" data-home={isHome ? "" : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    {
+      locales.map((l) => (
+        <link rel="alternate" hreflang={l} href={new URL(alternatePath(l, Astro.url.pathname), Astro.site).toString()} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL(alternatePath("fr", Astro.url.pathname), Astro.site).toString()} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/Selecta-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content={colors[0]?.hex ?? "#ff0000"} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Atelier Rita" />
+    <meta property="og:locale" content={t(locale, "ogLang")} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:url" content={canonical} />
+    {description && <meta property="og:description" content={description} />}
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={fullTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    {image && <meta name="twitter:image" content={image} />}
+
+    <script type="application/json" id="rita-colors" set:html={JSON.stringify(colors)} />
+    <InlineScript code={accent} />
+    <InlineScript code={transition} />
+  </head>
+  <body class:list={[isHome && "is-home"]}>
+    <div id="page">
+      <Header settings={settings} locale={locale} isHome={isHome} />
+      <main>
+        <div class={`template template--${template}`} data-template={template}>
+          <slot />
+        </div>
+      </main>
+    </div>
+    <script>
+      import "../scripts/global";
+    </script>
+  </body>
+</html>

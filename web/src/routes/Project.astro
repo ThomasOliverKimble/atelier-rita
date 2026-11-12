@@ -1,0 +1,33 @@
+---
+import Base from "../layouts/Base.astro";
+import ProjectView from "../components/ProjectView.astro";
+import { getProject, getProjects, getSettings } from "../lib/queries";
+import { isDraft } from "../lib/draft";
+import { localize, type Locale } from "../lib/i18n";
+import { imageUrl } from "../lib/image";
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+const { locale, slug } = Astro.props;
+const draft = await isDraft(Astro);
+const [settings, project, list] = await Promise.all([getSettings(draft), getProject(slug, draft), getProjects()]);
+if (!project) return Astro.redirect(locale === "fr" ? "/404" : "/en/404");
+
+// "Next project" follows the order of the Index page and wraps around.
+const order = (list?.items ?? []).filter((p) => p.slug);
+const at = order.findIndex((p) => p._id === project._id);
+const next = order[at + 1] ?? order[0] ?? null;
+const cover = project.images?.[0];
+---
+
+<Base
+  locale={locale}
+  settings={settings}
+  template="project"
+  title={project.seo?.metaTitle || localize(locale, project.title)}
+  description={project.seo?.metaDescription}
+  image={project.seo?.image || (cover?.url && cover.ext !== "svg" ? imageUrl(cover, 1200) : null)}>
+  <ProjectView project={project} next={next} locale={locale} />
+</Base>

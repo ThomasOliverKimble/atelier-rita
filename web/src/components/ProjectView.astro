@@ -1,0 +1,120 @@
+---
+import { localize, t, type Locale } from "../lib/i18n";
+import { localizedHref } from "../lib/links";
+import type { Project, ProjectRow } from "../lib/queries";
+import CityAndZip from "./CityAndZip.astro";
+import Figure from "./Figure.astro";
+import IconX from "./IconX.astro";
+import Modal from "./Modal.astro";
+import RichText from "./RichText.astro";
+import Slider from "./Slider.astro";
+
+interface Props {
+  project: Project;
+  next: ProjectRow | null;
+  locale: Locale;
+}
+const { project, next, locale } = Astro.props;
+const title = localize(locale, project.title) ?? "";
+const slides = project.images ?? [];
+const firstCaption = localize(locale, slides[0]?.caption) ?? "";
+
+const fiche = [
+  { key: t(locale, "type"), value: localize(locale, project.type) },
+  { key: t(locale, "programme"), value: localize(locale, project.programme) },
+  { key: t(locale, "client"), value: project.client },
+  { key: t(locale, "team"), value: project.team },
+  { key: t(locale, "city"), value: project.city },
+  { key: t(locale, "numbers"), value: localize(locale, project.numbers) },
+];
+const modalId = `project-${project.slug}`;
+---
+
+<div class:list={["content content--project app-h", next && "has-related"]} data-slider-ends>
+  <div class="slider">
+    <div class="flex--">
+      <Slider images={slides} locale={locale} />
+      {
+        next && (
+          <div class="related">
+            <a href={localizedHref(locale, { _type: "project", slug: next.slug })}>
+              <h2 class="text-display-lg--sm md:text-display-lg">{t(locale, "nextProject")}</h2>
+              <div class="image-cover">
+                <Figure image={next.cover} alt={next.slug ?? ""} sizes="20vw" />
+              </div>
+            </a>
+          </div>
+        )
+      }
+    </div>
+    <div class="caption hidden-sm" data-slider-caption>{firstCaption}</div>
+  </div>
+  <div class="footer">
+    <div class="grid md:grid-cols-5 gap-gutter items-baseline">
+      <h1 class="title col-span-4 md:col-span-3 text-display-lg--sm md:text-display-lg">
+        <div>{title},</div>
+        <CityAndZip city={project.city} zip={project.zip} />
+      </h1>
+      <button type="button" class="toggle" data-modal-toggle={modalId} aria-controls={modalId} aria-expanded="false">
+        {t(locale, "text")}
+      </button>
+      <div class="back-home">
+        <a href={locale === "fr" ? "/" : `/${locale}`} aria-label={t(locale, "home")}>
+          <IconX />
+        </a>
+      </div>
+    </div>
+  </div>
+  <Modal id={modalId} label={title} closeLabel={t(locale, "close")}>
+    <div class="project-infos">
+      <div class="header">
+        <div class="title">
+          {title}<span>, </span><CityAndZip city={project.city} zip={project.zip} />
+        </div>
+        <div class="year">{localize(locale, project.year)}</div>
+      </div>
+      <div class="text">
+        <RichText value={localize(locale, project.text)} />
+      </div>
+      <ul class="fiche-technique">
+        {
+          fiche.map((item) => (
+            <li>
+              {item.value && (
+                <>
+                  <div class="key">{item.key}</div>
+                  <div class="value">{item.value}</div>
+                </>
+              )}
+            </li>
+          ))
+        }
+        {
+          project.metas?.map((m) => (
+            <li>
+              <div class="key">{localize(locale, m.key)}</div>
+              <div class="value">
+                <RichText value={localize(locale, m.value)} />
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Modal>
+</div>
+
+<style>
+  /* "next project" is a desktop-only feature, as before */
+  @media (max-width: 1080px), (hover: none) and (pointer: coarse) {
+    .related {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import "../scripts/modal";
+  import "../scripts/svg";
+  import "../scripts/slider";
+</script>

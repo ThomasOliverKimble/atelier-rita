@@ -1,0 +1,18 @@
+packages:
+  - web
+  - studio
+
+# Supply-chain guard: prefer versions published at least 2 days ago.
+minimumReleaseAge: 2880
+
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
+
+# Patched versions of vulnerable transitive build tooling (same major).
+overrides:
+  path-to-regexp@>=4.0.0 <6.3.0: ^6.3.0
+  js-yaml@>=3.0.0 <3.15.2: ^3.15.2
+  smol-toml@<1.7.1: ^1.7.1
+  zod@>=4.0.0 <4.6.6: ^4.6.6
+  undici@>=7.0.0 <7.30.1: ^7.30.1

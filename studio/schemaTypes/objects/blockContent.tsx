@@ -1,8 +1,9 @@
+import type React from 'react'
 import {defineType, defineArrayMember} from 'sanity'
 // import { FiExternalLink, LinkIcon } from 'react-icons/fi'
 import {LinkIcon} from '@sanity/icons'
 import {FiExternalLink} from 'react-icons/fi'
-import linkIntternalTypes from '../misc/linkIntternalTypes'
+import linkInternalTypes from '../misc/linkInternalTypes'
 /**
  * This is the schema definition for the rich text fields used for
  * for this blog studio. When you import it in schemas.js it can be
@@ -13,24 +14,24 @@ import linkIntternalTypes from '../misc/linkIntternalTypes'
  *    type: 'blockContent'
  *  }
  */
-const TextL = (props: any): JSX.Element => (
+const TextL = (props: any): React.JSX.Element => (
   <p style={{fontSize: '2rem', marginTop: 0}}> {props.children} </p>
 )
-// const TextIndent = (props: any): JSX.Element => (
+// const TextIndent = (props: any): React.JSX.Element => (
 //   <div className="indent">
 //     <p style={{paddingLeft: '1rem', marginTop: 0}}> {props.children} </p>
 //   </div>
 // )
-const TextIndent = (props: any): JSX.Element => (
+const TextIndent = (props: any): React.JSX.Element => (
   <span style={{paddingLeft: '1rem', marginTop: 0, display: 'inline-block'}}>{props.children}</span>
 )
-const Underline = (props: any): JSX.Element => (
+const Underline = (props: any): React.JSX.Element => (
   <span style={{textDecoration: 'underline'}}> {props.children} </span>
 )
-const Outline = (props: any): JSX.Element => (
+const Outline = (props: any): React.JSX.Element => (
   <span style={{border: '1px solid ', borderRadius: '100%'}}> {props.children} </span>
 )
-// const TextXL = (props: any): JSX.Element => (
+// const TextXL = (props: any): React.JSX.Element => (
 //   <p style={{fontSize: '3rem', marginTop: 0}}> {props.children} </p>
 // )
 
@@ -97,7 +98,7 @@ export default defineType({
                 type: 'reference',
                 weak: true,
                 title: 'Reference',
-                to: linkIntternalTypes,
+                to: linkInternalTypes,
               },
             ],
           },

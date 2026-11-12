@@ -1,0 +1,14 @@
+---
+// Render-blocking inline script that must run before first paint, with its
+// SHA-256 registered in the page's Content-Security-Policy (Astro hashes its
+// own bundled scripts but not hand-written inline ones).
+import { createHash } from "node:crypto";
+
+interface Props {
+  code: string;
+}
+const code = Astro.props.code.trim();
+Astro.csp?.insertScriptHash(`sha256-${createHash("sha256").update(code).digest("base64")}`);
+---
+
+<script is:inline set:html={code} />
