@@ -35,10 +35,14 @@ if (table) {
     const src = row.querySelector<HTMLTemplateElement>("template");
     if (slot && src) slot.replaceChildren(src.content.cloneNode(true));
   };
+  // Nothing is shown unless a project row is hovered (or focused).
+  const hide = () => slot?.replaceChildren();
   if (slot) {
     rows.forEach((row) => {
       row.addEventListener("mouseenter", () => show(row));
+      row.addEventListener("mouseleave", hide);
       row.addEventListener("focusin", () => show(row));
+      row.addEventListener("focusout", hide);
     });
   }
 }
