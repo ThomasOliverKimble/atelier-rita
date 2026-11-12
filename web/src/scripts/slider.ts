@@ -1,7 +1,7 @@
 // Native scroll-snap slider (replaces react-slick). Prev/next buttons glide
 // with slick's old timing; swipe, trackpad and arrow keys are native.
-// Keeps the caption in sync and flags the last slide (".slider-ended"
-// reveals "next project" on the project page).
+// Keeps the caption in sync and reveals "next project" on project pages as
+// the last image scrolls in.
 
 import { isMobile } from "./media";
 
@@ -30,7 +30,7 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
   const track = root.querySelector<HTMLElement>(".slider-track")!;
   const slides = Array.from(track.querySelectorAll<HTMLElement>(".ss-slider__slide"));
   if (!slides.length) continue;
-  const page = root.closest(".slider");
+  const page = root.closest<HTMLElement>(".slider");
   const caption = page?.querySelector<HTMLElement>("[data-slider-caption]");
   const endTarget = root.closest<HTMLElement>("[data-slider-ends]");
   let index = 0;
@@ -51,7 +51,25 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
 
   const render = () => {
     if (caption) caption.textContent = slides[index].dataset.caption ?? "";
-    endTarget?.classList.toggle("slider-ended", index === slides.length - 1 && !isMobile.matches);
+  };
+
+  // "Projet suivant" (project pages, desktop): revealed in step with the
+  // scroll, by exactly the empty space opening up to the right of the last
+  // image, so it never covers an image and retreats as soon as the visitor
+  // scrolls back. --reveal goes from 0 (hidden) to 1 (fully shown).
+  const related = endTarget?.querySelector<HTMLElement>(".related");
+  const reveal = () => {
+    if (!endTarget || !related) return;
+    const last = slides[slides.length - 1];
+    const imagesRight = last.offsetLeft + last.offsetWidth - track.scrollLeft;
+    const free = track.clientWidth - imagesRight;
+    const r = isMobile.matches ? 0 : Math.max(0, Math.min(1, free / (related.offsetWidth || 1)));
+    endTarget.style.setProperty("--reveal", r.toFixed(3));
+  };
+  let revealFrame = 0;
+  const queueReveal = () => {
+    cancelAnimationFrame(revealFrame);
+    revealFrame = requestAnimationFrame(reveal);
   };
 
   // after a free swipe/trackpad scroll, the slide nearest the left edge wins
@@ -89,10 +107,11 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
   root.querySelector("[data-slider-next]")?.addEventListener("click", () => goTo(index + 1));
 
   // Wheel and trackpad scroll the carousel sideways. Listening on the whole
-  // carousel matters: on desktop the invisible prev/next halves sit on top of
-  // the track and would otherwise swallow the gesture. A vertical mouse wheel
+  // carousel (including the "Projet suivant" panel) matters: on desktop the
+  // invisible prev/next halves sit on top of the track and would otherwise
+  // swallow the gesture. A vertical mouse wheel
   // also scrolls sideways; at either end the page gets the wheel back.
-  root.addEventListener(
+  (page ?? root).addEventListener(
     "wheel",
     (e) => {
       if (e.ctrlKey) return;
@@ -113,15 +132,21 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
   track.addEventListener(
     "scroll",
     () => {
+      queueReveal();
       clearTimeout(settle);
       settle = window.setTimeout(sync, 80);
     },
     { passive: true },
   );
 
-  const ro = new ResizeObserver(fitTail);
+  const ro = new ResizeObserver(() => {
+    fitTail();
+    queueReveal();
+  });
   ro.observe(track);
   ro.observe(slides[slides.length - 1]);
   fitTail();
   render();
+  reveal();
+  isMobile.addEventListener("change", reveal);
 }

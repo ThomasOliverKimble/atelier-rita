@@ -4,11 +4,6 @@ body:has(.template--project) {
 }
 .template--project {
   .content--project {
-    &.slider-ended .slider {
-      .related {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-      }
-    }
 
     .slider {
       position: relative;
@@ -17,10 +12,9 @@ body:has(.template--project) {
       //   gap: var(--spacing-gutter);
       // }
       .related {
-        transition: clip-path 0.3s ease;
-      }
-      .related {
-        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+        // revealed from the right edge, following the carousel scroll
+        // (--reveal is set by scripts/slider.ts)
+        clip-path: inset(0 0 0 calc((1 - var(--reveal, 0)) * 100%));
         position: absolute;
         right: 0;
         top: 0;
@@ -95,14 +89,6 @@ body:has(.template--project) {
       }
     }
     @media all and (max-width: variables.$md) {
-      &.slider-ended .slider {
-        .slider-container {
-          clip-path: polygon(0 0, 20% 0, 20% 100%, 0 100%);
-        }
-        .related {
-          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
-      }
       .slider {
         .related {
           width: var(--gridder-1_2);

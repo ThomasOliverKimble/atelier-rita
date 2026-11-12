@@ -37,8 +37,7 @@
     }
     .card--home__inner {
       position: relative;
-      // fast start, soft landing: feels immediate under the pointer
-      transition: transform 0.32s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: transform 0.45s ease-in-out;
       transform-style: preserve-3d;
       position: relative;
       aspect-ratio: var(--aspect-ratio);
