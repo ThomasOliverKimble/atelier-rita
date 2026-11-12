@@ -86,7 +86,9 @@ header {
   }
 }
 .page-fade main {
-  animation: rita-page-in 0.2s ease-out both;
+  // No forwards fill: once the fade ends <main> must stop being its own
+  // stacking context, or the panels inside it would sit under the header.
+  animation: rita-page-in 0.2s ease-out backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
