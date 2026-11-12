@@ -6,6 +6,8 @@
 import { isMobile } from "./media";
 
 const DURATION = 500;
+// one-image step for swipes and wheel: quicker than the prev/next glide
+const STEP = 320;
 
 // cubic-bezier(0.53, 0, 0.36, 1), the old slick cssEase
 function bezier(x1: number, y1: number, x2: number, y2: number) {
@@ -99,25 +101,48 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
   root.querySelector("[data-slider-prev]")?.addEventListener("click", () => goTo(index - 1));
   root.querySelector("[data-slider-next]")?.addEventListener("click", () => goTo(index + 1));
 
-  // Horizontal gestures (trackpad swipe, shift + wheel) scroll the carousel.
-  // Vertical ones are left alone: on small screens they scroll the page.
+  // Horizontal gestures (trackpad swipe, shift + wheel) page the carousel:
+  // each gesture moves exactly one image in its direction, right away. The
+  // rest of that gesture, including the trackpad's momentum, is ignored, so
+  // it can never overshoot and spring back. A new swipe during the momentum
+  // tail (a clear jump in speed) counts as a new gesture.
+  // Vertical gestures are left alone: on small screens they scroll the page.
   // Listening on the whole carousel area (including the "Projet suivant"
   // panel) matters: on desktop the invisible prev/next halves sit on top of
   // the track and would otherwise swallow the gesture.
+  let locked = false;
+  let lockedAt = 0;
+  let lastSpeed = 0;
+  let pending = 0;
+  let quiet: number | undefined;
   (page ?? root).addEventListener(
     "wheel",
     (e) => {
       if (e.ctrlKey) return;
       const dx = e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX;
       if (Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return;
-      const max = track.scrollWidth - track.clientWidth;
-      if ((track.scrollLeft <= 0 && dx < 0) || (track.scrollLeft >= max - 1 && dx > 0)) return;
       e.preventDefault();
-      cancelAnimationFrame(frame);
-      animating = false;
-      track.classList.remove("is-animating");
       const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? track.clientWidth : 1;
-      track.scrollLeft += dx * unit;
+      const speed = Math.abs(dx * unit);
+
+      clearTimeout(quiet);
+      quiet = window.setTimeout(() => {
+        locked = false;
+        pending = 0;
+      }, 160);
+
+      const now = performance.now();
+      const newSwipe = locked && now - lockedAt > 250 && speed > lastSpeed * 1.6 + 4;
+      lastSpeed = speed;
+      if (locked && !newSwipe) return;
+
+      pending += dx * unit;
+      if (Math.abs(pending) < 12) return;
+      locked = true;
+      lockedAt = now;
+      const dir = Math.sign(pending);
+      pending = 0;
+      goTo(index + dir, STEP);
     },
     { passive: false },
   );
@@ -133,7 +158,7 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
     const target = Math.min(slides[nearest].offsetLeft, track.scrollWidth - track.clientWidth);
     const distance = Math.abs(track.scrollLeft - target);
     if (!cssSnaps.matches && distance > 1) {
-      goTo(nearest, Math.min(DURATION, 200 + distance * 0.6));
+      goTo(nearest, Math.min(STEP, 160 + distance * 0.4));
     } else {
       index = nearest;
       render();
