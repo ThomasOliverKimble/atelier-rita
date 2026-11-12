@@ -72,16 +72,9 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
     revealFrame = requestAnimationFrame(reveal);
   };
 
-  // after a free swipe/trackpad scroll, the slide nearest the left edge wins
-  const sync = () => {
-    if (animating) return;
-    index = current();
-    render();
-  };
-
   let frame = 0;
   let animating = false;
-  const goTo = (i: number) => {
+  const goTo = (i: number, duration = DURATION) => {
     index = Math.max(0, Math.min(slides.length - 1, i));
     render();
     const target = Math.min(slides[index].offsetLeft, track.scrollWidth - track.clientWidth);
@@ -91,7 +84,7 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
     animating = true;
     track.classList.add("is-animating");
     const step = (now: number) => {
-      const p = Math.min(1, (now - start) / DURATION);
+      const p = Math.min(1, (now - start) / duration);
       track.scrollLeft = from + (target - from) * ease(p);
       if (p < 1) frame = requestAnimationFrame(step);
       else {
@@ -129,13 +122,31 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
     { passive: false },
   );
 
+  // Once a free scroll (trackpad swipe and its momentum, shift + wheel, arrow
+  // keys) comes to rest, glide so the nearest image starts at the left edge:
+  // an image is never left cut off. Phones and small screens use native CSS
+  // snapping instead (see _slider.scss).
+  const cssSnaps = matchMedia("(max-width: 1080px), (hover: none)");
+  const sync = () => {
+    if (animating) return;
+    const nearest = current();
+    const target = Math.min(slides[nearest].offsetLeft, track.scrollWidth - track.clientWidth);
+    const distance = Math.abs(track.scrollLeft - target);
+    if (!cssSnaps.matches && distance > 1) {
+      goTo(nearest, Math.min(DURATION, 200 + distance * 0.6));
+    } else {
+      index = nearest;
+      render();
+    }
+  };
+
   let settle: number | undefined;
   track.addEventListener(
     "scroll",
     () => {
       queueReveal();
       clearTimeout(settle);
-      settle = window.setTimeout(sync, 80);
+      settle = window.setTimeout(sync, 140);
     },
     { passive: true },
   );
