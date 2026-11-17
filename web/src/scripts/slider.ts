@@ -59,13 +59,19 @@ for (const root of Array.from(document.querySelectorAll<HTMLElement>("[data-slid
   // scroll, by exactly the empty space opening up to the right of the last
   // image, so it never covers an image and retreats as soon as the visitor
   // scrolls back. --reveal goes from 0 (hidden) to 1 (fully shown).
+  // Only the scroll from the image before last onto the last one counts: on
+  // a wide screen a short carousel leaves that space empty from the start,
+  // and the link must still wait for the end of the carousel.
   const related = endTarget?.querySelector<HTMLElement>(".related");
   const reveal = () => {
     if (!endTarget || !related) return;
     const last = slides[slides.length - 1];
+    const beforeLast = slides[slides.length - 2];
     const imagesRight = last.offsetLeft + last.offsetWidth - track.scrollLeft;
     const free = track.clientWidth - imagesRight;
-    const r = isMobile.matches ? 0 : Math.max(0, Math.min(1, free / (related.offsetWidth || 1)));
+    const travelled = beforeLast ? track.scrollLeft - beforeLast.offsetLeft : free;
+    const shown = Math.min(free, travelled);
+    const r = isMobile.matches ? 0 : Math.max(0, Math.min(1, shown / (related.offsetWidth || 1)));
     endTarget.style.setProperty("--reveal", r.toFixed(3));
   };
   let revealFrame = 0;
