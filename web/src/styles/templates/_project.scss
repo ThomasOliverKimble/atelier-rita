@@ -87,7 +87,9 @@
             min-width: 9rem;
           }
           .value {
-            white-space: pre;
+            // keeps the editors' line breaks, wraps long values
+            white-space: pre-wrap;
+            min-width: 0;
           }
         }
       }
@@ -138,5 +140,12 @@
       transform: none;
       justify-self: center;
     }
+  }
+}
+// Phones: the title spans the four implicit columns of the footer grid, the
+// button has to span them too to be centred on the screen.
+@media all and (max-width: #{variables.$sm - 1}) {
+  .template--project .content--project .footer .toggle {
+    grid-column: span 4 / span 4;
   }
 }

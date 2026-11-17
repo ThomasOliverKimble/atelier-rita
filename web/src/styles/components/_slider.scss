@@ -102,6 +102,8 @@
     }
     img {
       height: 70vh !important;
+      // under the browser toolbars, so the title below is never covered
+      height: 70svh !important;
       object-fit: contain;
       object-position: left top;
     }

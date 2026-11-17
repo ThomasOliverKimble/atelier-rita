@@ -53,7 +53,13 @@ main {
 
 @media all and (max-width: variables.$md) {
   body {
-    --app-h: calc(100vh - calc(var(--header-h) + var(--spacing-sm) * 0.6));
+    // Exactly one screen: main's bottom padding is --spacing-xs, and svh is
+    // the height left under a phone browser's toolbars (vh is taller, which
+    // let the project and atelier pages scroll by that difference).
+    --app-h: calc(100vh - calc(var(--header-h) + var(--spacing-xs)));
+    @supports (height: 100svh) {
+      --app-h: calc(100svh - calc(var(--header-h) + var(--spacing-xs)));
+    }
   }
   .sm-only {
     display: block;
