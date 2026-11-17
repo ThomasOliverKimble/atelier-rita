@@ -20,11 +20,29 @@ html:has(.template--home) {
     .modal {
       background-color: var(--color-primary) !important;
       color: var(--color-bg) !important;
+      // The news panel is sized by its text: the usual panel proportions when
+      // the text is short, taller when it needs more room, and never taller
+      // than the screen (only then does the text scroll, above the cross).
+      display: flex;
+      height: auto;
+      max-height: calc(100dvh - var(--spacing-xs) * 2);
+      @media all and (min-width: #{variables.$md + 1}) {
+        width: max(calc(60vh * 376 / 501), 320px);
+      }
+      @media all and (max-width: variables.$md) {
+        aspect-ratio: auto;
+        bottom: auto;
+        max-height: calc(100dvh - var(--header-h) - var(--spacing-xs));
+      }
       .modal__body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: none;
         padding: var(--spacing-xs);
+      }
+      .modal__footer {
+        position: static;
+        flex: none;
       }
       svg {
         // transform: scale(2);
@@ -56,6 +74,7 @@ html:has(.template--home) {
         transform: none !important;
         top: 0 !important;
         left: 0 !important;
+        max-height: none;
         margin-bottom: var(--spacing-xs);
         &:not(.modal--open) {
           display: none;
