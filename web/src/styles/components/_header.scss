@@ -105,6 +105,29 @@ body.is-home header {
     opacity: var(--swap, 0);
     transform: translateY(calc(1rem * (1 - var(--swap, 0))));
   }
+
+  // Once the menu has fully appeared (first scroll) it stays for the rest of
+  // the visit to the page, also back at the top where the logo is large and
+  // the description returns. The description keeps clear of the language
+  // link, which now shares its line.
+  &.has-nav {
+    nav {
+      opacity: 1;
+      transform: none;
+    }
+    .description {
+      padding-right: 4em;
+    }
+    // Phones: the large logo takes the full width, so the menu waits just
+    // below it until the logo is small again.
+    @media all and (max-width: #{variables.$sm - 1}) {
+      &:not(.is-shrunk) [data-nav-col] {
+        inset: 100% var(--spacing-xs) auto auto;
+        width: var(--gridder-1_2);
+        height: calc(var(--logo-end) * 191 / 744);
+      }
+    }
+  }
 }
 
 body:not(.is-home) header {
